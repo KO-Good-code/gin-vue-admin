@@ -7,10 +7,15 @@
       align="center"
       >
       <template slot-scope="scope">
-        <el-image style="width: 25px; height: 25px" v-if="data.type == 'img' && scope.row[data.key]" :src="scope.row[data.key][0]" :preview-src-list="[scope.row[data.key]]">
-        </el-image>
-        <span v-else-if="data.filter">{{ Allfilters(data.filter, scope.row[data.key], scope.row) }}</span>
-        <span v-else>{{ scope.row[data.key] }}</span>
+        <el-select v-if="data.type === 'select'" v-model="scope.row[data.key]" placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input v-else v-model="scope.row[data.key]" :placeholder="data.placeholder"></el-input>
       </template>
     </el-table-column>
 </template>
@@ -19,10 +24,32 @@
 export default {
   data () {
     return {
+      options: [
+        {
+          label: "文字",
+          value: "txt"
+        },
+        {
+          label: "图片",
+          value: "img"
+        },
+        {
+          label: "枚举",
+          value: "map"
+        },
+        {
+          label: "时间",
+          value: "time"
+        },
+      ]
     };
   },
 
-  props: ["data"],
+  model: {
+    prop: "value",
+  },
+
+  props: ["data", "value"],
 
   filters: {
     
