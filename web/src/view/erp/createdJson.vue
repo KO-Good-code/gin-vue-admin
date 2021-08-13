@@ -58,7 +58,7 @@ export default {
       field119Options: [],
       Json: {
         name: "",
-        map: [
+        data: [
             {
               label: "sdsa",
               name: "132",
@@ -124,7 +124,7 @@ export default {
     },
     async creatdJsonName() {
       try {
-        const res = await creatdJsonName();
+        const res = await creatdJsonName(this.Json);
         console.log(res)
       } catch (error) {
         console.log(error)
