@@ -69,6 +69,11 @@
           :filter-method="filterHandler"
           sortable
           > </el-table-column>
+          <el-table-column label="浮动比例" :show-overflow-tooltip="true" align="center" >
+            <template slot-scope="scope">
+              <el-button icon="el-icon-bottom" type="text" style="color:#67C23A;">{{proportions(scope.row.num)}}</el-button>
+            </template>
+          </el-table-column>
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
             <el-button type="text" size="mini" @click="add">修改</el-button>
@@ -79,7 +84,7 @@
   </div>
 </template>
 <script>
-import tableList from "./components/tableList.vue"
+// import tableList from "./components/tableList.vue"
 export default {
   props: [],
   data() {
@@ -88,6 +93,7 @@ export default {
         mobile: undefined,
         field118: null,
         field119: undefined,
+        num: 0
       },
       query: {
         max:0,
@@ -175,11 +181,11 @@ export default {
       ]
     }
   },
-  components: {
-    tableList
+  filters: {
+    
+    
   },
   created() {},
-  mounted() {},
   methods: {
     submitForm() {
       const len = this.list.length;
@@ -195,6 +201,10 @@ export default {
       this.$refs['elForm'].resetFields()
     },
     add(){},
+    proportions(val) {
+      const result = (100 - (val/this.formData.num*100)).toFixed(2);
+      return `${result}%`
+    },
     filterHandler(value, row, column){
       const property = column['property'];
       return row[property] >= this.query.min || row[property]>= this.query.max;
