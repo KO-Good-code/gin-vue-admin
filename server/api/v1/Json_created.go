@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"gin-vue-admin/global"
 	"gin-vue-admin/model"
 	"gin-vue-admin/model/response"
@@ -53,9 +54,15 @@ func GetTableHead(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	scoreMap := [...]interface{}
-	for _, key := range data {
-		scoreMap[key.Label] = key.Key
+	scoreMap := make([]struct{
+		Name string `json:"name"`
+		Key string	`json:"key"`
+	}, len(data))
+	for i, key := range data {
+		fmt.Println(i, key)
+		scoreMap[i].Key = key.Key
+		scoreMap[i].Name = key.Label
 	}
+	fmt.Println(scoreMap)
 	response.OkWithData(scoreMap, c)
 }
