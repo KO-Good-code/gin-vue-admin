@@ -9,6 +9,6 @@ import (
 func InitCreatdJson(Router *gin.RouterGroup) {
 	ApiRouter := Router.Group("json").Use(middleware.OperationRecord())
 	{
-		ApiRouter.POST("creatdJson", v1.CreatedJsonSql)     // 创建客户
+		ApiRouter.GET("companyList", v1.CompanyList)     // 创建客户
 	}
 }
