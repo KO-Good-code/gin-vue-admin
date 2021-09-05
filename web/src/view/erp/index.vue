@@ -86,6 +86,7 @@
 </template>
 <script>
 // import tableList from "./components/tableList.vue"
+import { getCompanyList, addCompanyList, deleteCompanyList, updateCompanyList } from "@/api/company";
 export default {
   props: [],
   data() {
@@ -183,7 +184,9 @@ export default {
     }
     
   },
-  created() {},
+  created() {
+    this.getCompanyList()
+  },
   methods: {
     // 计算
     computedNum() {
@@ -198,10 +201,9 @@ export default {
       this.$refs[formName].validate(valid => {
         if (!valid) return
         // TODO 提交表单
-        this.list.push({
-          ...this.form
-        });
-        this.resetForm(formName)
+        this.addCompanyList();
+        
+        // this.resetForm(formName)
       })
     },
     resetForm(formName) {
@@ -219,10 +221,8 @@ export default {
         type: 'warning'
       }).then(() => {
         // TODO 提交修改数据接口
-        this.list[this.newform.index].name = this.newform.name;
-        this.list[this.newform.index].num = this.newform.num;
-        console.log(this.newform.index)
-        this.dialogVisible = false;
+        this.updateCompanyList()
+        
       })
       
     },
@@ -234,7 +234,7 @@ export default {
         type: 'warning'
       }).then(() => {
         // TODO 删除数据接口
-        this.list = this.list.filter( i => i.name !== row.name)
+        this.deleteCompanyList(row)
       })
     },
     // 修改数据按钮
@@ -242,7 +242,7 @@ export default {
       this.dialogVisible = true;
       this.newform.name = row.name;
       this.newform.num = row.num;
-      this.newform.id = id;
+      this.newform.id = row.ID;
     },
     // 关闭弹窗回调
     handleClose(){
@@ -259,7 +259,52 @@ export default {
         return 'top';
       }
       return '';
-    }
+    },
+    // get company  list
+    async getCompanyList(){
+      try {
+        const { data } = await getCompanyList();
+        this.list = data;
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async addCompanyList(){
+      try {
+        const { data } = await addCompanyList(this.form);
+        this.list.push({
+          ...this.form
+        });
+        console.log(data)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async deleteCompanyList(row) {
+      try {
+        const res = await deleteCompanyList(row);
+        if(res.code == 0) {
+          this.list = this.list.filter( i => i.name !== row.name)
+        }
+        console.log(res);
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async updateCompanyList() {
+      try {
+        const res = await updateCompanyList(this.newform);
+        if(res.code == 0) {
+          this.getCompanyList();
+          this.dialogVisible = false;
+        }
+        console.log(res);
+      } catch (error) {
+        console.log(error)
+      }
+    },
+
   }
 }
 
