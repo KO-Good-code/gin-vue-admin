@@ -35,6 +35,7 @@
       :data="list"
       :default-sort = "{prop: 'num', order: 'descending'}"
       :row-class-name="tableRowClassName"
+      v-loading="loading"
       >
         <!-- <tableList v-for="(i, t) in listMap" :key="t" :data="i" /> -->
         <el-table-column
@@ -92,6 +93,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      loading: false,
       formData: {
         max: null,
         min: null,
@@ -263,19 +265,23 @@ export default {
     // get company  list
     async getCompanyList(){
       try {
+        this.loading = true;
         const { data } = await getCompanyList();
         this.list = data;
+        this.loading = false;
         console.log(data)
       } catch (error) {
+        this.loading = false;
         console.log(error)
       }
     },
     async addCompanyList(){
       try {
-        const { data } = await addCompanyList(this.form);
-        this.list.push({
-          ...this.form
-        });
+        const { data, code } = await addCompanyList(this.form);
+        if(code == 0) {
+          this.getCompanyList()
+        }
+        
         console.log(data)
       } catch (error) {
         console.log(error)
