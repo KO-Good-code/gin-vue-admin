@@ -291,7 +291,7 @@ export default {
       try {
         const res = await deleteCompanyList(row);
         if(res.code == 0) {
-          this.list = this.list.filter( i => i.name !== row.name)
+          this.list = this.list.filter( i => i.ID !== row.ID)
         }
         console.log(res);
       } catch (error) {
